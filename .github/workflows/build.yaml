@@ -17,3 +17,9 @@ jobs:
         run: ./ci/build-app.sh
       - name: Run tests
         run: ./ci/unit-test-app.sh
+      - name: Upload Repo
+        uses: actions/upload-artifact@v2
+        with: 
+          name: code
+          path: .
+          retention-days: 1
