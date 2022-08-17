@@ -31,7 +31,7 @@ jobs:
           name: repo
           path: .
       - name: Run build script
-        run: ./ci/build-app.sh
+        run: chmod +x ci/build-app.sh && ./ci/build-app.sh
       - name: Upload artifact
         uses: actions/upload-artifact@v2
         with:
@@ -39,7 +39,7 @@ jobs:
           path: .
           retention-days: 1
   test:
-    needs: build
+    needs: checkout
     runs-on: ubuntu-latest
     container:
       image: gradle:6-jdk11
@@ -50,4 +50,4 @@ jobs:
           name: built-code
           path: .
       - name: Run tests
-        run: ./ci/unit-test-app.sh
+        run: chmod +x ci/unit-test-app.sh && ./ci/unit-test-app.sh
