@@ -58,8 +58,8 @@ jobs:
     runs-on: ubuntu-latest
     env:
       GIT_COMMIT: ${{ github.sha }}
-      DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
-      DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+      docker_username: ${{ secrets.DOCKER_USERNAME }}
+      docker_password: ${{ secrets.DOCKER_PASSWORD }}
     steps:
       - name: Get built code
         uses: actions/download-artifact@v2
