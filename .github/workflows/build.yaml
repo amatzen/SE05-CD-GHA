@@ -70,3 +70,18 @@ jobs:
         run: chmod +x ci/build-docker.sh && ./ci/build-docker.sh
       - name: Push Docker image
         run: chmod +x ci/push-docker.sh && ./ci/push-docker.sh
+  component_test:
+    needs: deliver
+    runs-on: ubuntu-latest
+    env:
+      GIT_COMMIT: ${{ github.sha }}
+      docker_username: ${{ secrets.DOCKER_USERNAME }}
+      docker_password: ${{ secrets.DOCKER_PASSWORD }}
+    steps:
+      - name: Get built code
+        uses: actions/download-artifact@v2
+        with:
+          name: built-code
+          path: .
+      - name: Execute component test
+        run: chmod +x ci/component-test.sh && GIT_COMMIT="GA-$GITHUB_SHA" && ci/component-test.sh
