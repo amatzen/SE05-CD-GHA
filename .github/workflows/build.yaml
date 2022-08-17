@@ -47,7 +47,7 @@ jobs:
       - name: Get repo
         uses: actions/download-artifact@v2
         with:
-          name: built-code
+          name: repo
           path: .
       - name: Run tests
         run: chmod +x ci/unit-test-app.sh && ./ci/unit-test-app.sh
