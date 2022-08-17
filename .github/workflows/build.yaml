@@ -51,3 +51,22 @@ jobs:
           path: .
       - name: Run tests
         run: chmod +x ci/unit-test-app.sh && ./ci/unit-test-app.sh
+  deliver:
+    needs:
+      - build
+      - test
+    runs-on: ubuntu-latest
+    env:
+      GIT_COMMIT: ${{ github.sha }}
+      DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+      DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+    steps:
+      - name: Get built code
+        uses: actions/download-artifact@v2
+        with:
+          name: built-code
+          path: .
+      - name: Build Docker image
+        run: chmod +x ci/build-docker.sh && ./ci/build-docker.sh
+      - name: Push Docker image
+        run: chmod +x ci/push-docker.sh && ./ci/push-docker.sh
