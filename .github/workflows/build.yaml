@@ -1,4 +1,4 @@
-name: Build
+name: Java CI
 
 on:
   push:
@@ -6,20 +6,48 @@ on:
       - main
 
 jobs:
-  build:
+  checkout:
     runs-on: ubuntu-latest
     container:
       image: gradle:6-jdk11
     steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-      - name: Run build script
-        run: ./ci/build-app.sh
-      - name: Run tests
-        run: ./ci/unit-test-app.sh
-      - name: Upload Repo
-        uses: actions/upload-artifact@v2
-        with: 
+    - name: Checkout
+      uses: actions/checkout@v2
+    - name: Upload artifact
+      uses: actions/upload-artifact@v2
+      with:
+        name: repo
+        path: .
+        retention-days: 1
+  build:
+    needs: checkout
+    runs-on: ubuntu-latest
+    container:
+      image: gradle:6-jdk11
+    steps:
+      - name: Get repo
+        uses: actions/download-artifact@v2
+        with:
           name: code
           path: .
+      - name: Run build script
+        run: ./ci/build-app.sh
+      - name: Upload artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: built-code
+          path: .
           retention-days: 1
+  test:
+    needs: build
+    runs-on: ubuntu-latest
+    container:
+      image: gradle:6-jdk11
+    steps:
+      - name: Get repo
+        uses: actions/download-artifact@v2
+        with:
+          name: built-code
+          path: .
+      - name: Run tests
+        run: ./ci/unit-test-app.sh
