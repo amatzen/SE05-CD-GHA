@@ -85,3 +85,18 @@ jobs:
           path: .
       - name: Execute component test
         run: chmod +x ci/component-test.sh && GIT_COMMIT="GA-$GITHUB_SHA" && ci/component-test.sh
+  performance_test:
+    needs: deliver
+    runs-on: ubuntu-latest
+    env:
+      GIT_COMMIT: ${{ github.sha }}
+      docker_username: ${{ secrets.DOCKER_USERNAME }}
+      docker_password: ${{ secrets.DOCKER_PASSWORD }}
+    steps:
+      - name: Get built code
+        uses: actions/download-artifact@v2
+        with:
+          name: built-code
+          path: .
+      - name: Execute performance test
+        run: chmod +x ci/performance-test.sh && ci/performance-test.sh
