@@ -4,6 +4,9 @@ on:
   push:
     branches:
       - main
+  pull_request:
+    branches:
+      - main
 
 jobs:
   checkout:
@@ -100,3 +103,4 @@ jobs:
           path: .
       - name: Execute performance test
         run: chmod +x ci/performance-test.sh && ci/performance-test.sh
+  
